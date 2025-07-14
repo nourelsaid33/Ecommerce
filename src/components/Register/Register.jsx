@@ -5,6 +5,7 @@ import axios from 'axios'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContext'
+import Spinner from '../Spinner/Spinner'
 
 export default function Register() {
   let {setuserLogin} =useContext(UserContext)
@@ -173,7 +174,7 @@ let validationSchema=Yup.object().shape({
           {/* alert */}
         </div>
         <div>
-          <button type="submit" className="flex w-full justify-center rounded-md border border-transparent bg-green-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2">{isLoading ?<i className='fas fa-spinner fa-spin'></i>: 'RegisterAccount' }
+          <button type="submit" className="flex w-full justify-center rounded-md border border-transparent bg-green-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2">{isLoading ? <Spinner/>: 'RegisterAccount' }
             
           </button>
         </div>

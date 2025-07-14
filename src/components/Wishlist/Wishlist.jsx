@@ -1,17 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { WishListContext } from '../../Context/WishListContext';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../Context/CartContext';
 import Helmet from 'react-helmet';
+import Spinner from '../Spinner/Spinner';
 export default function Wishlist() {
   const { wishlistItems, removeFromWishlist,addToWishlist } = useContext(WishListContext);
    let{addToCart}= useContext(CartContext)
+    const [deletingProductId, setDeletingProductId] = useState(null);
+      const [isAdding, setIsAdding] = useState(false); 
+    
+   
   
   const navigate = useNavigate();
 
    async function handleAddToCart(prodId){
+    setIsAdding(true);
    let response= await addToCart(prodId)
+   setIsAdding(false); 
    console.log(response);
    if(response?.data?.status==='success'){
     toast.success(response?.data?.message, {
@@ -32,7 +39,9 @@ export default function Wishlist() {
    }
 
   async function handleDelete(prodId) {
+     setDeletingProductId(prodId);
     const response = await removeFromWishlist(prodId);
+    setDeletingProductId(null);
     if (response?.data?.status === 'success') {
       toast.success('Product removed from wishlist');
     } else {
@@ -66,12 +75,30 @@ export default function Wishlist() {
 
                  <div >
           
-                   <a onClick={()=> handleDelete(prod._id)} className="cursor-pointer text-sm text-red-700 ps-1">
-                   <i className='fa fa-trash  text-red-700'></i> Remove </a>
+                 <a onClick={() => handleDelete(prod._id)} className="cursor-pointer text-sm text-red-700 ps-1 flex items-center gap-2">
+                             {deletingProductId === prod._id ? (
+                                 <Spinner/>
+                                      ) : (
+                                   <i className="fa fa-trash text-red-700"></i>
+                                       )}
+                                          Remove
+                                    </a>
 
                  </div>
               </td>
-              <td className='pe-3'> <button onClick={()=>{handleAddToCart(prod._id)}}  className="cursor-pointer my-10 flex items-center justify-center p-4 mx-auto text-sm font-medium  border border-green-600 rounded-lg" type="button"> add To Cart</button></td>
+              <td className='pe-3'> 
+                 <button
+                             onClick={() => handleAddToCart(prod?._id)}
+                             disabled={isAdding}
+                             className={` bg-green-600 text-white py-2 px-4 rounded-md w-3/4 cursor-pointer ${isAdding ? 'opacity-70 cursor-not-allowed' : 'hover:bg-green-700'}`}
+                           >+ Add to Cart
+                             {isAdding ? (
+                               <Spinner/>
+                             ) : (
+                              null
+                             )}
+                           </button>
+                </td>
         
                 </tr>
               ))}

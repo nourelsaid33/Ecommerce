@@ -5,29 +5,34 @@ import Products from '../Products/Products'
 import toast from 'react-hot-toast'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Helmet from 'react-helmet'
+import Spinner from '../Spinner/Spinner'
 export default function Cart() {
  let{numOfCartItems ,totalPrice,products,updateCart,deleteCartItems,clearCart}= useContext(CartContext)
  const navigate = useNavigate();
+ const [deletingProductId, setDeletingProductId] = useState(null);
+  const [updatingProductId, setUpdatingProductId] = useState(null);
 
 
-    async function handleUpdate(prodId,count){
+async function handleDelete(prodId) {
+  setDeletingProductId(prodId); 
+  let response = await deleteCartItems(prodId);
+  setDeletingProductId(null);
+
+  if (response?.data?.status === 'success') {
+    toast.success('Product deleted');
+  } else {
+    toast.error('Error deleting product...');
+  }
+}
+
+
+ async function handleUpdate(prodId,count){
+      setUpdatingProductId(prodId)
      let response=await updateCart(prodId,count)
-     
+      setUpdatingProductId(null)
      console.log(response)
       if(response?.data?.status==='success'){
       toast.success('product updated')
-     }else{
-      toast.error('error...')
-     }
-    }
-
-
-    async function handleDelete(prodId){
-     let response=await deleteCartItems(prodId)
-     
-     console.log(response)
-     if(response?.data?.status==='success'){
-      toast.success('product Deleted')
      }else{
       toast.error('error...')
      }
@@ -81,31 +86,70 @@ export default function Cart() {
         </div>
          <div >
           
-          <a onClick={()=> handleDelete(prod.product._id)} className="cursor-pointer text-sm text-red-700 ps-1">
-          <i className='fa fa-trash  text-red-700'></i> Remove
-          </a>
+         <a onClick={() => handleDelete(prod.product._id)} className="cursor-pointer text-sm text-red-700 ps-1 flex items-center gap-2">
+            {deletingProductId === prod.product._id ? (
+                <Spinner/>
+                     ) : (
+                  <i className="fa fa-trash text-red-700"></i>
+                      )}
+                         Remove
+                   </a>
+
 
         </div>
         </td>
         
         <td className="ps-30 py-4">
           <div className="flex items-center">
-              <button onClick={() => handleUpdate(prod.product._id, prod.count - 1)} className="inline-flex items-center justify-center p-1 ms-3 text-sm font-medium h-8 w-8 text-gray-500 border border-green-600 rounded-lg" type="button">
-              <span className="sr-only">Quantity button</span>
-              <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 1h16" />
-              </svg>
-            </button>
-            <div>
-              <input type="number" id="first_product" className=" w-12    text-sm  placeholder-green-950 px-2.5 py-1 text-center" placeholder={prod?.count} required />
-            </div>
-              <button onClick={() => handleUpdate(prod.product._id, prod.count + 1)} className="inline-flex items-center justify-center p-1 ms-3 text-sm font-medium h-8 w-8 text-gray-500 border border-green-600 rounded-lg" type="button">
-              <span className="sr-only">Quantity button</span>
-              <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 1v16M1 9h16" />
-              </svg>
-            </button>
-          </div>
+ 
+  <button
+    onClick={() => {
+      setUpdatingProductId(prod.product._id);
+      handleUpdate(prod.product._id, prod.count - 1).finally(() => setUpdatingProductId(null));
+    }}
+    className="inline-flex items-center justify-center p-1 ms-3 text-sm font-medium h-8 w-8 text-gray-500 border border-green-600 rounded-lg"
+    type="button"
+  >
+    {updatingProductId === prod.product._id ? (
+      <Spinner />
+    ) : (
+      <svg className="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 1h16" />
+      </svg>
+    )}
+    <span className="sr-only">Decrease quantity</span>
+  </button>
+
+ 
+  <div>
+    <input
+      type="number"
+      readOnly
+      value={prod?.count}
+      className="w-12 text-sm text-center px-2.5 py-1 placeholder-green-950"
+    />
+  </div>
+
+  
+  <button
+    onClick={() => {
+      setUpdatingProductId(prod.product._id);
+      handleUpdate(prod.product._id, prod.count + 1).finally(() => setUpdatingProductId(null));
+    }}
+    className="inline-flex items-center justify-center p-1 ms-3 text-sm font-medium h-8 w-8 text-gray-500 border border-green-600 rounded-lg"
+    type="button"
+  >
+    {updatingProductId === prod.product._id ? (
+      <Spinner />
+    ) : (
+      <svg className="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 1v16M1 9h16" />
+      </svg>
+    )}
+    <span className="sr-only">Increase quantity</span>
+  </button>
+</div>
+
         </td>
        
        
