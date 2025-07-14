@@ -36,22 +36,7 @@ export default function Register() {
   })
     
   }
-   
-// function validateInput(values){
-//   let errors={}
-//  if(values.name==''){
-//   errors.name='name is req'
-//  }else if(!/^[A-Z][a-z]{3,6}$/.test(values.name)){
-//   errors.name='name must start with capital letter min 3 max 6'
-//  }
-//  if(values.email==''){
-//   errors.email='email is req'
-//  }else if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)){
-//   errors.email='invalid mail'
-//  }
 
-//  return errors
-// }
 let validationSchema=Yup.object().shape({
   name:Yup.string().required('name is req').min(3, 'min 3 letters').max(6,'max 6 letters'),
   email:Yup.string().required('email is req').email('invail email'),
@@ -73,12 +58,10 @@ let validationSchema=Yup.object().shape({
     useEffect(()=>{
 
     },[])
-    // console.log(formik)
   return<>
-  <h2>register</h2>
- <div className="bg-gray-100 flex h-screen items-center justify-center  sm:px-6 lg:px-8">
-  <div className="w-full max-w-md space-y-8">
-    <div className="bg-white shadow-md rounded-md p-6 mt-60 ">
+ <div className="flex h-screen items-center justify-center  sm:px-6 lg:px-8 ">
+  <div className="w-full max-w-md space-y-8 ">
+    <div className="bg-gray-50 shadow-md rounded-md p-6 mt-60 mb-20">
       <img className="mx-auto h-12 w-auto" src="https://www.svgrepo.com/show/499664/user-happy.svg" />
       <h2 className="my-3 text-center text-3xl font-bold tracking-tight text-green-900">
         Register Now

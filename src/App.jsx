@@ -32,7 +32,7 @@ import VerifyCode from './components/Verifycode/Verifycode'
 // import {QueryClient,QueryClientProvider} from '@tanstack/react-query'
 
 let route=createBrowserRouter([
-  {path:'' ,element: <Layout/> ,children:[
+       {path:'' ,element: <Layout/> ,children:[
        {index:true , element:<ProtectRoute><Home/></ProtectRoute>},
        {path:'brands' , element:<ProtectRoute><Brands/></ProtectRoute>},
        {path:'categories' , element:<ProtectRoute><Categories/></ProtectRoute>},
@@ -47,7 +47,7 @@ let route=createBrowserRouter([
        {path:"/verifycode", element:<VerifyCode/>} ,
        {path:'productdetails/:id',element:<ProtectRoute><Productsdetail/></ProtectRoute>},
        {path:'product' , element:<ProtectRoute><RecentProducts></RecentProducts></ProtectRoute>},
-       {path:'*' , element:<NotFound/>},
+      //  {path:'*' , element:<NotFound/>},
   ]}
  
 ])
